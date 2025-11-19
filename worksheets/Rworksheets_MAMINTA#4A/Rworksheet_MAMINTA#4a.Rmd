@@ -1,0 +1,217 @@
+---
+title: "Rworksheet_MAMINTA#4a"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#1.
+
+#a. Describe the data.
+
+```{r}
+Respondent <- 1:8
+Gender <- c("M", "F", "F", "M", "F", "M", "F", "M")
+ShoeSize <- c(9, 7, 6, 10, 6.5, 9.5, 7, 11)
+Height_cm <- c(175, 160, 158, 180, 162, 176, 159, 185)
+shoe_height_df <- data.frame(Respondent, Gender, ShoeSize, Height_cm)
+shoe_height_df
+```
+
+#b. Create a subset by males and females with their corresponding shoe size and height.
+```{r}
+males <- subset(shoe_height_df, Gender == "M", select = c(ShoeSize, Height_cm))
+females <- subset(shoe_height_df, Gender == "F", select = c(ShoeSize, Height_cm))
+males
+females
+```
+
+#c. Find the mean of shoe size and height of the respondents.
+```{r}
+
+mean_shoe_overall <- mean(shoe_height_df$ShoeSize)
+mean_height_overall <- mean(shoe_height_df$Height_cm)
+mean_shoe_by_gender <- tapply(shoe_height_df$ShoeSize, shoe_height_df$Gender, mean)
+mean_height_by_gender <- tapply(shoe_height_df$Height_cm, shoe_height_df$Gender, mean)
+
+
+mean_shoe_overall
+mean_height_overall
+mean_shoe_by_gender
+mean_height_by_gender
+```
+
+
+#d. Is there a relationship between shoe size and height? Why?
+```{r}
+#The dataset shows that people with larger shoe sizes also tend to be taller. 
+#This makes sense, as shoe size is often linked to body proportions, and taller 
+#individuals usually have bigger feet. Although the pattern is visible in the 
+#data, using a statistical method like correlation analysis would provide a more 
+#precise measure of how strong this relationship is.
+```
+
+```{r}
+##2. Construct character vector months to a factor with factor() and assign the 
+#result to factor_months_vector. Print out factor_months_vector and assert that
+#R prints out the factor levels below the actual values.
+
+Months <- c(
+  "March","April","January","November","January",
+  "September","October","September","November","August",
+  "January","November","November","February","May","August",
+  "July","December","August","August","September","November","February",
+  "April"
+)
+
+factor <- factor(Months)
+factor
+```
+
+```{r}
+#3. Then check the summary() of the months_vector and factor_months_vector. Inter-
+#pret the results of both vectors. Are they both equally useful in this case?
+
+summary(Months)
+summary(factor)
+```
+
+```{r}
+#4. Create a vector and factor for the table below.
+factor_data <- c("East", rep("West", 4), rep("North", 3))
+factor_data
+
+new_order_data <- factor(factor_data, levels = c("East", "West", "North"))
+print(new_order_data)
+```
+
+```{r}
+#5. Enter the data below in Excel with file name = import_march.csv
+
+import_march <- read.table("import_march.csv", header = TRUE, sep = ",")
+import_march
+
+```
+
+```{r}
+#6. Full Search
+
+#a. Create an R Program that allows the User to randomly select numbers from 1 to 50.
+#Then display the chosen number. If the number is beyond the range of the selected choice,
+#it will have to display a string “The number selected is beyond the range of 1 to 50”. If
+#number 20 is inputted by the User, it will have to display “TRUE”, otherwise display the
+#input number.
+
+num <- as.integer(readline("Choose a number (1 to 50): "))
+
+cat("Chosen number:", num, "\n")
+
+if (is.na(num)) {
+  cat("Invalid!\n")
+  
+} else if (num < 1 || num > 50) {
+  cat("Choose only from 1-50!\n")
+  
+} else if (num == 20) {
+  print(TRUE)
+  
+} else {
+  print(num)
+}
+
+```
+
+```{r}
+#7. Change
+#At ISATU University’s traditional cafeteria, snacks can only be purchased with bills. A
+#long-standing rule at the concession stand is that snacks must be purchased with as few
+#coins as possible. There are three types of bills: 50 pesos, 100 pesos, 200 pesos, 500 pesos,
+#1000 pesos.
+#a. Write a function that prints the minimum number of bills that must be paid, given the
+#price of the snack.
+#Input: Price of snack (a random number divisible by 50) Output: Minimum number of bills
+#needed to purchase a snack.
+
+min_bills <- function(price) {
+  bills <- c(1000, 500, 200, 100, 50)
+  
+  remaining <- price
+  count <- 0
+  
+  for (b in bills) {
+    if (remaining >= b) {
+      count <- count + (remaining %/% b)
+      remaining <- remaining %% b
+    }
+  }
+  
+  return(count)
+}
+
+
+
+```
+
+```{r}
+#8. The following is each student’s math score for one semester. Based on this, answer the
+#following questions.
+
+#a. Create a dataframe from the above table. Write the R codes and its output.
+
+student_grade <- data.frame(
+  Name = c("Annie", "Thea", "Steve", "Hanna"),
+  Grade1 = c(85, 65, 75, 95),
+  Grade2 = c(65, 75, 55, 75),
+  Grade3 = c(85, 90, 80, 100),
+  Grade4 = c(100, 90, 85, 90)
+)
+
+student_grade
+
+
+#b.Without using the rowMean function, output the average score of students whose average
+#math score over 90 points during the semester. write R code and its output.
+
+for (i in 1:nrow(student_grade)) {
+  avg <- (student_grade$Grade1[i] + student_grade$Grade2[i] +
+          student_grade$Grade3[i] + student_grade$Grade4[i]) / 4
+  
+  if (avg > 90) {
+    cat(student_grade$Name[i], "'s average grade this semester is ", avg, ".\n", sep="")
+  }
+}
+
+#c.Without using the mean function, output as follows for the tests in which the average
+#score was less than 80 out of 4 tests.
+
+tests <- student_grade[, 2:5]
+
+for (j in 1:4) {
+  total <- sum(tests[, j])
+  avg <- total / nrow(tests)
+
+  if (avg < 80) {
+    cat("The", j, "th test was difficult.\n")
+  }
+}
+#d.Without using the max function, output as follows for students whose highest score for
+#a semester exceeds 90 points.
+
+for (i in 1:nrow(student_grade)) {
+  grades <- student_grade[i, 2:5]
+  highest <- grades[1]
+
+  for (g in grades) {
+    if (g > highest) highest <- g
+  }
+  
+  if (highest > 90) {
+    cat(student_grade$Name[i], "'s highest grade this semester is ", highest, ".\n", sep="")
+  }
+}
+
+```
