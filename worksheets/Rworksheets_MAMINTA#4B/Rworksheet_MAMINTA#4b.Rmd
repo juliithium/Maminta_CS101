@@ -1,0 +1,239 @@
+---
+title: "RWorksheet_MAMINTA#4b.Rmd"
+author: "Ansarah Juliana Maminta"
+date: "2025-11-19"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#Using Loop Function
+#for() loop
+#1. Using the for loop, create an R script that will display a 5x5 matrix as shown in
+#Figure 1. It must contain vectorA = [1,2,3,4,5] and a 5 x 5 zero matrix.
+#Hint Use abs() function to get the absolute value
+
+vec1 <- c(1, 2, 3, 4, 5)
+
+Mtrix <- matrix(0, nrow = 5, ncol = 5)
+
+
+for (i in 1:5) {
+for (j in 1:5) {
+Mtrix[i, j] <- abs(i - j) + 1
+}
+}
+print(Mtrix)
+```
+
+```{r}
+#2. Print the string "*" using for() function. The output should be the same as shown
+#in Figure
+
+for (i in 1:5) {
+line <- ""      
+for (j in 1:i) {
+line <- paste(line, "*")
+}
+print(line)
+}
+
+```
+
+```{r}
+#3. Get an input from the user to print the Fibonacci sequence starting from the 1st input
+#up to 500. Use repeat and break statements. Write the R Scripts and its output.
+input <- readline("Enter starting Fibonacci number: ")
+
+if (input == "") {
+  start_val <- 10   # default value when knitting
+} else {
+  start_val <- as.numeric(input)
+}
+
+if (is.na(start_val)) {
+  stop("Invalid input. Please enter a numeric value.")
+}
+
+
+a <- 0
+b <- 1
+
+repeat {
+  fib <- a
+  
+  if (fib >= start_val) {
+    print(fib)
+  }
+  
+  if (fib > 500) {
+    break
+  }
+  
+  temp <- a + b
+  a <- b
+  b <- temp
+}
+
+```
+
+```{r}
+#4. Import the dataset as shown in Figure 1 you have created previously.
+#if csv
+data <- read.csv("Householddata.csv")
+head(data)
+
+#if excel
+library(readxl)
+data <- read_excel("Householddata.xlsx")
+head(data)
+
+#b. Create a subset for gender(female and male). How many observations are there in
+#Male? How about in Female? Write the R scripts and its output.
+
+female <- subset(data, Sex == "F")
+male <- subset(data, Sex == "M")
+num_female <- nrow(female)
+num_male <- nrow(male)
+num_female
+num_male
+
+#c. Create a graph for the number of males and females for Household Data. Use plot(),
+#chart type = barplot. Make sure to place title, legends, and colors. Write the R scripts and
+#its result.
+counts <- c(num_male, num_female)
+barplot(
+  counts,
+  names.arg = c("Male", "Female"),
+  main = "Number of Males and Females in Household Data",
+  xlab = "Gender",
+  ylab = "Count",
+  col = c("blue", "pink"),
+  legend.text = c("Male", "Female")
+)
+
+```
+
+```{r}
+#5. The monthly income of Dela Cruz family was spent on the following:
+#a. Create a piechart that will include labels in percentage.Add some colors and title of
+#the chart. Write the R scripts and show its output.
+# Data for Dela Cruz family's monthly expenses
+
+expenses <- c(60, 10, 5, 25)
+categories <- c("Food", "Electricity", "Savings", "Miscellaneous")
+
+percent_labels <- paste0(categories, " (", expenses, "%)")
+
+pie(
+  expenses,
+  labels = percent_labels,
+  main = "Monthly Expenses of Dela Cruz Family",
+  col = rainbow(length(expenses))
+)
+```
+
+```{r}
+#6. Use the iris dataset.
+data(iris) 
+#a. Check for the structure of the dataset using the str() function. Describe what you have seen in the output.
+str(iris)
+
+#b. Create an R object that will contain the mean of the sepal.length,
+#sepal.width,petal.length,and petal.width. What is the R script and its result?
+mean_values <- colMeans(iris[, 1:4])
+mean_values
+
+#c. Create a pie chart for the Species distribution. Add title, legends, and colors. Write
+#the R script and its result.
+
+species_counts <- table(iris$Species)
+
+pie(
+  species_counts,
+  labels = names(species_counts),
+  main = "Distribution of Iris Species",
+  col = c("red", "green", "blue")
+)
+legend(
+  "topright",
+  legend = names(species_counts),
+  fill = c("red", "green", "blue")
+)
+
+#d. Subset the species into setosa, versicolor, and virginica. Write the R scripts
+#and show the last six (6) rows of each species.
+setosa <- subset(iris, Species == "setosa")
+versicolor <- subset(iris, Species == "versicolor")
+virginica <- subset(iris, Species == "virginica")
+tail(setosa)
+tail(versicolor)
+tail(virginica)
+
+#e. Create a scatterplot of the sepal.length and sepal.width using the different
+#species(setosa,versicolor,virginica). Add a title = “Iris Dataset”, subtitle = “Sepal
+#width and length, labels for the x and y axis, the pch symbol and colors should be based on
+#the species.
+
+iris$Species <- as.factor(iris$Species)
+colors <- c("red", "green", "blue")[iris$Species]
+plot(
+  iris$Sepal.Length,
+  iris$Sepal.Width,
+  col = colors,
+  pch = 19,
+  main = "Iris Dataset",
+  sub = "Sepal width and length",
+  xlab = "Sepal Length",
+  ylab = "Sepal Width"
+)
+
+legend(
+  "topright",
+  legend = levels(iris$Species),
+  col = c("red", "green", "blue"),
+  pch = 19
+)
+#Interpretation 
+
+#Setosa, shown in red, has the largest sepal widths and the smallest sepal 
+#lengths, forming a tight and easily identifiable cluster. Versicolor, shown in
+#green, has moderate values for both sepal length and sepal width, with slight
+#overlap with Virginica. Virginica, shown in blue, has the longest sepal lengths 
+#and moderate sepal widths. Overall, Setosa is clearly separable from the other
+#two species, while Versicolor and Virginica overlap somewhat, although Virginica
+#generally has larger measurements. This indicates that sepal measurements 
+#effectively distinguish Setosa, but are less reliable for separating Versicolor 
+#from Virginica.
+```
+
+
+
+```{r}
+#7. Import the alexa-file.xlsx. Check on the variations. Notice that there are ex-
+#tra whitespaces among black variants (Black Dot, Black Plus, Black Show, Black 
+#Spot). Also on the white variants (White Dot, White Plus, White Show, White Spot).
+
+## THERE IS NO ALEXA-FILE 
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
+```{r}
+
+```
