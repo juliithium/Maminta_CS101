@@ -181,9 +181,9 @@ thecols <- c("A", "B", "C", "D")
 thearrays <- c("1st-Dimensional Array", "2nd-Dimensional Array", "3rd-Dimensional Array")
 
 # Create array with names
-arr_named <- array(rep(numbers, 2), dim = c(2, 4, 3),
+arr_name <- array(rep(numbers, 2), dim = c(2, 4, 3),
                    dimnames = list(therows, thecols, thearrays))
-arr_named
+arr_name
 ```
 #The rows are named a and b, the columns are A to D, and each layer is called 1st, 2nd, and 3rd Dimensional Array
 
