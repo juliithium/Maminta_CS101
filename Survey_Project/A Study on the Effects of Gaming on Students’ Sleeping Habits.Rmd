@@ -1,0 +1,393 @@
+---
+title: "A Study on the Effects of Gaming on Students’ Sleeping Habits"
+author: "SOCO-MAMINTA-CABABASAY-SUNER"
+date: "2025-11-17"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Introduction
+
+This study examines how gaming influences the sleeping habits of students from 
+the College of Computing and Informatics. A total of 50 students participated in 
+the survey, representing BSIT, BSCS, and BSIS programs. The purpose of the study 
+is to identify whether gaming behavior — including frequency, time spent, and type 
+of games played — contributes to changes in sleep schedule, sleep duration, and 
+academic performance.
+
+
+Demographic Overview
+
+```{r}
+demographic <- read.csv("demographic.csv")
+demographic
+
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+demographic <- read.csv("demographic.csv")
+
+sex_data <- demographic %>% 
+  filter(Group == "Sex") %>%
+  mutate(Percent = Count / sum(Count) * 100,
+         Label = paste0(round(Percent, 1), "%"))
+
+ggplot(sex_data, aes(x = "", y = Count, fill = Category)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y") +
+  geom_text(aes(label = Label),
+            position = position_stack(vjust = 0.5),
+            size = 4) +
+  labs(
+    title = "Sex Distribution of Students",
+    fill = "Sex"
+  ) +
+  theme_void()
+
+course_data <- demographic %>% 
+  filter(Group == "Course") %>%
+  mutate(Percent = Count / sum(Count) * 100,
+         Label = paste0(round(Percent, 1), "%"))
+
+ggplot(course_data, aes(x = "", y = Count, fill = Category)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y") +
+  geom_text(aes(label = Label),
+            position = position_stack(vjust = 0.5),
+            size = 4) +
+  labs(
+    title = "Course Distribution of Students",
+    fill = "Course"
+  ) +
+  theme_void()
+
+age_data <- demographic %>% 
+  filter(Group == "Age") %>%
+  mutate(Percent = Count / sum(Count) * 100,
+         Label = paste0(round(Percent, 1), "%"))
+
+ggplot(age_data, aes(x = "", y = Count, fill = Category)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y") +
+  geom_text(aes(label = Label),
+            position = position_stack(vjust = 0.5),
+            size = 3) +
+  labs(
+    title = "Age Distribution of Students",
+    fill = "Age"
+  ) +
+  theme_void()
+```
+
+
+
+
+The respondents represent a balanced mix of male and female students, with BSIT 
+students comprising the majority of the sample.
+
+
+The sex distribution of the respondents shows a relatively balanced composition. 
+Male students account for 27 respondents (54%), while female students comprise 
+23 respondents (46%).
+In terms of academic program, the majority of respondents are enrolled in the 
+Bachelor of Science in Information Technology (BSIT), with 31 students (62%). 
+This is followed by Bachelor of Science in Information Systems (BSIS) with 10
+students (20%), and Bachelor of Science in Computer Science (BSCS) with 9 students (18%).
+The age distribution reveals that most respondents fall within the 19- and 20-year-old 
+age groups, each representing 19 students (38% combined). Students aged 21
+years old account for 7 respondents (14%), while ages 18, 22, and 23
+
+
+
+
+
+Gaming Behavior of Students
+
+```{r}
+gamestatus <- read.csv("Game_status.csv")
+gamestatus
+
+```
+
+A significant majority (86%) of students engage in gaming, indicating that 
+gaming is a highly common leisure activity within the college.
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+
+games <- read.csv("Game_status.csv")  
+games <- games %>%
+  mutate(
+    Percent = Count / sum(Count) * 100,
+    Label = paste0(Plays_Games, "\n", round(Percent, 1), "%")
+  )
+
+ggplot(games, aes(x = "", y = Count, fill = Plays_Games)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y") +
+  geom_text(aes(label = Label),
+            position = position_stack(vjust = 0.5),
+            size = 5,
+            fontface = "bold") +
+  labs(
+    title = "Students Who Play Games",
+    subtitle = "Gaming Participation",
+    fill = "Response"
+  ) +
+  theme_void() +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    legend.title = element_text(size = 12, face = "bold"),
+    legend.text = element_text(size = 11)
+  )
+
+games <- read.csv("games_played.csv")
+
+
+games <- games %>%
+  arrange(desc(Players))
+
+ggplot(games, aes(x = reorder(Game, Players), y = Players)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_text(aes(label = Players),
+            hjust = -0.2,
+            size = 4,
+            fontface = "bold") +
+  coord_flip() +
+  labs(
+    title = "Games Played by Students",
+    subtitle = "Number of Students per Game",
+    x = "Game",
+    y = "Number of Players"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 18, face = "bold"),
+    plot.subtitle = element_text(size = 12),
+    axis.title = element_text(size = 12, face = "bold"),
+    axis.text = element_text(size = 11)
+  )
+
+```
+The bar plot shows that Valorant has the highest number of players, followed by Mobile Legends and League of Legends. Most other games have one to two players, indicating a wide diversity of gaming preferences among students, with a strong inclination toward competitive online multiplayer games.
+
+
+
+Hours Spent on Gaming
+
+Based on responses from 50 students, the majority reported playing video games between three and five hours daily. Specifically, ten students indicated they play for three hours a day, seven students reported four hours daily, and nine students play for five hours daily. A smaller group stated they play between six and twelve hours daily, with two students citing ten hours of gameplay and one student reporting twelve hours daily. Additionally, five students answered "N/A," suggesting they likely do not play video games at all.
+
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+hours <- read.csv("gaming_hour.csv") 
+hours$Hours <- factor(
+  hours$Hours,
+  levels = c(
+    "Don't play games",
+    "0 HOURS","1 HOURS","2 HOURS","3 HOURS","4 HOURS","5 HOURS",
+    "6 HOURS","7 HOURS","8 HOURS","10 HOURS","12 HOURS"
+  )
+)
+
+ggplot(hours, aes(x = Hours, y = Students)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_text(aes(label = Students),
+            vjust = -0.3,
+            size = 4,
+            fontface = "bold") +
+  labs(
+    title = "Hours Spent Playing Games per Day",
+    subtitle = "Number of Students by Gaming Duration",
+    x = "Hours Played",
+    y = "Number of Students"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    axis.title = element_text(size = 12, face = "bold"),
+    axis.text.x = element_text(size = 10, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 11)
+  )
+
+```
+
+The bar chart indicates that the majority of students spend 3 to 5 hours per day playing games, with 3 hours being the most common duration. A smaller group of respondents reported not playing games at all, while only a few students spend extended hours (8 hours or more) gaming. Most students spend a moderate to high amount of time playing, with several students exceeding the typical leisure limit. This suggests a potential link to sleep compromise.
+
+
+
+
+Sleeping Time
+
+Students reported a range of bedtime patterns, with the most common hours being 10:00 PM, cited by 11 students, 12:00 AM, also reported by 11 students, and 11:00 PM, indicated by nine students. However, a concerning portion of the group—15 students in total—report going to sleep extremely late, with bedtimes between 1:00 AM and 5:00 AM.
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+
+sleep <- read.csv("sleeptime.csv") 
+
+
+sleep$Sleep_Time <- factor(
+  sleep$Sleep_Time,
+  levels = c(
+    "9:00 PM","10:00 PM","11:00 PM","12:00 AM",
+    "1:00 AM","2:00 AM","3:00 AM","4:00 AM","5:00 AM"
+  )
+)
+
+ggplot(sleep, aes(x = Sleep_Time, y = Students)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_text(aes(label = Students),
+            vjust = -0.3,
+            size = 4,
+            fontface = "bold") +
+  labs(
+    title = "Sleep Time of Students",
+    subtitle = "Number of Students by Usual Bedtime",
+    x = "Sleep Time",
+    y = "Number of Students"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    axis.title = element_text(size = 12, face = "bold"),
+    axis.text.x = element_text(size = 10, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 11)
+  )
+
+```
+
+Nearly one-third of students sleep past 1 AM, indicating disrupted or delayed sleep schedules likely influenced by nighttime gaming.
+
+
+
+
+Sleep Duration
+
+
+```{r}
+
+library(ggplot2)
+library(readr)
+sleep_data <- read_csv("sleepduration.csv")
+
+ggplot(sleep_data, aes(x = Sleep_Hours, y = Students)) +
+  geom_col(
+    fill = "#4C72B0",
+    width = 0.7
+  ) +
+  geom_text(
+    aes(label = Students),
+    vjust = -0.4,
+    size = 4,
+    family = "sans"
+  ) +
+  labs(
+    title = "Distribution of Students by Sleep Duration",
+    x = "Hours of Sleep",
+    y = "Number of Students"
+  ) +
+  theme_minimal(base_size = 14, base_family = "sans") +
+  theme(
+    plot.title = element_text(face = "bold", size = 16, hjust = 0.5),
+    axis.title = element_text(face = "bold"),
+    axis.text = element_text(size = 12),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
+```
+
+Over 50% of the students get 6 hours or less, which is below the recommended 7–9 hours for young adults. Sleep deprivation appears common.
+
+
+
+
+
+
+Perceived Effects of Gaming and Sleep on Their Lives
+
+
+When asked about the perceived effects of gaming and sleep on their lives, the majority of students acknowledged a negative impact. A total of 34 students stated that playing video games affects their sleep, while 18 did not perceive this effect. Similarly, 33 students reported that a lack of sleep negatively affects their academic performance, compared to 17 students who felt it did not.
+
+```{r}
+library(ggplot2)
+library(tidyr)
+library(readr)
+data <- read_csv("game_effects.csv")
+data_long <- data %>%
+  pivot_longer(
+    cols = c(Yes, No),
+    names_to = "Response",
+    values_to = "Count"
+  )
+ggplot(data_long, aes(x = "", y = Count, fill = Response)) +
+  geom_col(width = 1, color = "white") +
+  coord_polar(theta = "y") +
+  facet_wrap(~ Question) +
+  geom_text(
+    aes(label = paste0(Response, ": ", Count)),
+    position = position_stack(vjust = 0.5),
+    size = 4,
+    family = "sans"
+  ) +
+  scale_fill_manual(
+    values = c("Yes" = "#4C72B0", "No" = "#DD8452")
+  ) +
+  labs(
+    title = "Students' Responses on Gaming, Sleep, and Academics",
+    fill = "Response"
+  ) +
+  theme_void(base_size = 14, base_family = "sans") +
+  theme(
+    plot.title = element_text(face = "bold", size = 16, hjust = 0.5),
+    strip.text = element_text(face = "bold", size = 12),
+    legend.position = "bottom"
+  )
+
+```
+
+A large portion of students recognize the impact of gaming and lack of sleep on their sleep schedule and academic performance. This shows strong self-awareness of the issue.
+
+
+
+
+Qualitative Insights
+
+
+Out of the 50 students, 14 chose not to provide any additional remarks. Among the remaining respondents, their comments revealed several recurring themes. The most frequent was Daytime Sleepiness and Fatigue, with many students reporting they consistently feel tired, lack energy, and experience drowsiness during class. Another prominent theme was Academic Difficulties, including reports of decreased concentration, trouble understanding lessons, and overall poorer academic performance. Additionally, several students expressed Health and Wellbeing Concerns, citing increased stress, a decline in sleep quality, and negative impacts on their general health. Acknowledgement of Personal Responsibility was another theme, as some students emphasized the need to balance gaming with proper sleep and recognized the direct consequences of staying up too late. Finally, a few provided remarks on the Restoration of Healthy Patterns, sharing that returning to a regular sleep schedule had significantly improved their daily focus and academic results.
+
+
+
+
+Discussion
+
+The findings reveal that gaming is a prevalent activity among computing students, with most respondents engaging in gaming on a regular basis. The data suggest a strong association between gaming habits and delayed sleep schedules, as many students tend to stay up late, particularly those who play competitive online games that often involve prolonged sessions.
+
+A notable portion of the participants reported insufficient sleep, with more than half receiving six hours or fewer per night. This aligns with their self-reported experiences of fatigue, academic struggle, and reduced concentration. The responses indicate that students are aware that their gaming and sleep patterns affect their academic performance, although awareness does not necessarily translate into healthier habits.
+
+The thematic analysis of the open-ended responses supports the quantitative data, revealing consistent difficulties with maintaining focus, completing academic tasks, and sustaining overall wellbeing due to poor sleep. These outcomes align with existing literature that links inadequate sleep to decreased cognitive functioning, slower reaction time, and weakened academic performance.
+
+
+
+
+Conclusion
+
+The study concludes that gaming significantly influences the sleeping habits and academic functioning of students from the College of Computing and Informatics. With the majority of students engaging in gaming and a considerable portion reporting late sleeping times and inadequate sleep duration, the findings highlight a clear connection between excessive gaming and negative sleep outcomes. Students also recognize that poor sleep affects their academic performance, daily energy levels, and overall wellbeing.
+
+While gaming remains an enjoyable and widely practiced activity, the results emphasize the importance of establishing balance and healthy boundaries. Encouraging time management, promoting awareness of sleep hygiene, and guiding students toward healthier routines may help mitigate the negative effects of gaming on sleep and academic success.
