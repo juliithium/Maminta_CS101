@@ -15,7 +15,7 @@ library(dplyr)
 library(RColorBrewer)   
 library(readxl)
 
-#1. 
+#1. a
 data(mpg)
 
 write.csv(mpg, "mpg.csv", row.names = FALSE)
@@ -34,6 +34,7 @@ str(mpg)
 str(mpg)
 
 #All numeric are continous
+
 ```
 
 ```{r}
